@@ -1,0 +1,882 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/nav/cwj.jpg">
+  <link rel="icon" href="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/nav/cwj.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="T-River">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 设置用户组（1）连接云服务器：在终端命令行中输入  ssh root@（公网IP）ssh root@132.232.122.26  （2）添加用户组：groupadd （用户组名）gruoupadd admin  （3）添加用户名：useradd （用户名）-g （用户组名）useradd Sunday -g admin  （4）设置用户密码：passwd （用户名）passwd Sunda">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django搭建服务器">
+<meta property="og:url" content="https://everysunday.github.io/2022/02/24/Django%E6%90%AD%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="随记">
+<meta property="og:description" content="1. 设置用户组（1）连接云服务器：在终端命令行中输入  ssh root@（公网IP）ssh root@132.232.122.26  （2）添加用户组：groupadd （用户组名）gruoupadd admin  （3）添加用户名：useradd （用户名）-g （用户组名）useradd Sunday -g admin  （4）设置用户密码：passwd （用户名）passwd Sunda">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/sudoers%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/sshd_config.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/yum-cron.config.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/sshd_config_port.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/ssh.xml.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/10245.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/urls_import.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/setting_hosts.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/setting_databases.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/sftp_json.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/%E8%BF%9C%E7%A8%8B%E5%90%8C%E6%AD%A5%E5%88%B0%E6%9C%AC%E5%9C%B0.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/setting_debug.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/setting_templates.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/setting_static_root.png">
+<meta property="og:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/nginx.conf.png">
+<meta property="article:published_time" content="2022-02-24T10:33:40.000Z">
+<meta property="article:modified_time" content="2023-05-24T14:07:44.253Z">
+<meta property="article:author" content="T-River">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="服务器">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/sudoers%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Django搭建服务器 - 随记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"everysunday.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":120,"cursorChar":"( ⊙ o ⊙ )","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 35vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>随记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/nav/xiaol.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Django搭建服务器"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-02-24 18:33" pubdate>
+          2022年2月24日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          45 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Django搭建服务器</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h5 id="1-设置用户组"><a href="#1-设置用户组" class="headerlink" title="1. 设置用户组"></a>1. 设置用户组</h5><h6 id="（1）连接云服务器：在终端命令行中输入-ssh-root-（公网IP）"><a href="#（1）连接云服务器：在终端命令行中输入-ssh-root-（公网IP）" class="headerlink" title="（1）连接云服务器：在终端命令行中输入  ssh root@（公网IP）"></a>（1）连接云服务器：在终端命令行中输入  <strong>ssh root@（公网IP）</strong></h6><div class="code-wrapper"><pre><code class="hljs nginx"><span class="hljs-attribute">ssh</span> root@<span class="hljs-number">132.232.122.26</span></code></pre></div>
+
+<h6 id="（2）添加用户组：groupadd-（用户组名）"><a href="#（2）添加用户组：groupadd-（用户组名）" class="headerlink" title="（2）添加用户组：groupadd （用户组名）"></a>（2）添加用户组：<strong>groupadd （用户组名）</strong></h6><div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">gruoupadd admin</span></code></pre></div>
+
+<h6 id="（3）添加用户名：useradd-（用户名）-g-（用户组名）"><a href="#（3）添加用户名：useradd-（用户名）-g-（用户组名）" class="headerlink" title="（3）添加用户名：useradd （用户名）-g （用户组名）"></a>（3）添加用户名：<strong>useradd （用户名）-g （用户组名）</strong></h6><div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">useradd Sunday -g admin</span></code></pre></div>
+
+<h6 id="（4）设置用户密码：passwd-（用户名）"><a href="#（4）设置用户密码：passwd-（用户名）" class="headerlink" title="（4）设置用户密码：passwd （用户名）"></a>（4）设置用户密码：<strong>passwd （用户名）</strong></h6><div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">passwd Sunday</span></code></pre></div>
+
+<h6 id="（5）进入到指定目录，找到-sudoers-修改用户权限，并配置其他文件："><a href="#（5）进入到指定目录，找到-sudoers-修改用户权限，并配置其他文件：" class="headerlink" title="（5）进入到指定目录，找到 sudoers 修改用户权限，并配置其他文件："></a>（5）进入到指定目录，找到 <strong>sudoers</strong> 修改用户权限，并配置其他文件：</h6><div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /etc
+vim sudoers</code></pre></div>
+
+<h6 id="（6）更改配置文件："><a href="#（6）更改配置文件：" class="headerlink" title="（6）更改配置文件："></a>（6）更改配置文件：</h6><p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/sudoers%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE.png" srcset="/img/loading.gif" lazyload>)</p>
+<h6 id="（7）在该行下面添加："><a href="#（7）在该行下面添加：" class="headerlink" title="（7）在该行下面添加："></a>（7）在该行下面添加：</h6><div class="code-wrapper"><pre><code class="hljs ada">Sunday  <span class="hljs-keyword">ALL</span>=(<span class="hljs-keyword">ALL</span>)       <span class="hljs-keyword">ALL</span></code></pre></div>
+
+
+
+<h6 id="（8）为了安全，应该禁止随便登录-root-用户："><a href="#（8）为了安全，应该禁止随便登录-root-用户：" class="headerlink" title="（8）为了安全，应该禁止随便登录 root 用户："></a>（8）为了安全，应该禁止随便登录 <strong>root</strong> 用户：</h6><p>​            进入 <strong>SSH</strong> 目录：</p>
+<div class="code-wrapper"><pre><code class="hljs awk">cd <span class="hljs-regexp">/etc/</span>ssh</code></pre></div>
+
+<p>​            找到 <strong>sshd_config</strong> ，修改配置内容：</p>
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/sshd_config.png" srcset="/img/loading.gif" lazyload></p>
+<p>​            去掉该行的 <strong>#</strong> ，把yes改为no：</p>
+<div class="code-wrapper"><pre><code class="hljs nginx"><span class="hljs-attribute">PermitRootLogin</span> <span class="hljs-literal">no</span></code></pre></div>
+
+<p>​            重启 <strong>sshd</strong> 服务：</p>
+<div class="code-wrapper"><pre><code class="hljs maxima">systemctl <span class="hljs-built_in">restart</span> sshd.service</code></pre></div>
+
+
+
+<h5 id="2-设置登录证书"><a href="#2-设置登录证书" class="headerlink" title="2. 设置登录证书"></a>2. 设置登录证书</h5><h6 id="（1）为了不用每次连接云服务器都要输入密码，在本地生成秘钥连接："><a href="#（1）为了不用每次连接云服务器都要输入密码，在本地生成秘钥连接：" class="headerlink" title="（1）为了不用每次连接云服务器都要输入密码，在本地生成秘钥连接："></a>（1）为了不用每次连接云服务器都要输入密码，在本地生成秘钥连接：</h6><p>​            进入本地 <strong>.ssh</strong> 文件夹：</p>
+<div class="code-wrapper"><pre><code class="hljs jboss-cli"><span class="hljs-keyword">cd</span> <span class="hljs-string">.ssh</span></code></pre></div>
+
+<p>​            生成秘钥：</p>
+<div class="code-wrapper"><pre><code class="hljs mathematica"><span class="hljs-variable">ssh</span><span class="hljs-operator">-</span><span class="hljs-variable">keygen</span> <span class="hljs-operator">-</span><span class="hljs-variable">t</span> <span class="hljs-variable">rsa</span> <span class="hljs-operator">-</span><span class="hljs-built_in">C</span> <span class="hljs-built_in">Sunday</span> <span class="hljs-operator">-</span><span class="hljs-variable">f</span> <span class="hljs-variable">Sundayfile</span></code></pre></div>
+
+<h6 id="（2）将秘钥文件拷贝到远程服务器中："><a href="#（2）将秘钥文件拷贝到远程服务器中：" class="headerlink" title="（2）将秘钥文件拷贝到远程服务器中："></a>（2）将秘钥文件拷贝到远程服务器中：</h6><div class="code-wrapper"><pre><code class="hljs nginx"><span class="hljs-attribute">scp</span> Sundayfile.pub Sunday@<span class="hljs-number">132.232.122.26</span>:.</code></pre></div>
+
+<h6 id="（3）连接云服务器，并创建一个-ssh-文件夹，在-ssh-文件夹中创建一个-authorized-keys-文件，将拷贝的文件写入到-authorized-keys-中："><a href="#（3）连接云服务器，并创建一个-ssh-文件夹，在-ssh-文件夹中创建一个-authorized-keys-文件，将拷贝的文件写入到-authorized-keys-中：" class="headerlink" title="（3）连接云服务器，并创建一个 .ssh 文件夹，在 .ssh 文件夹中创建一个 authorized_keys 文件，将拷贝的文件写入到 authorized_keys 中："></a>（3）连接云服务器，并创建一个 <strong>.ssh</strong> 文件夹，在 <strong>.ssh</strong> 文件夹中创建一个 <strong>authorized_keys</strong> 文件，将拷贝的文件写入到 <strong>authorized_keys</strong> 中：</h6><div class="code-wrapper"><pre><code class="hljs jboss-cli">ssh Sunday@132.232.122.26mkdir <span class="hljs-string">.sshcd</span> <span class="hljs-string">.sshtouch</span> authorized_keyscat Sundayfile.pub &gt;&gt; ~<span class="hljs-string">/.ssh/authorized_keys</span></code></pre></div>
+
+<h6 id="（4）为了安全，修改-ssh-和-authorized-keys-文件的权限，只对Sunday用户开放各种权限："><a href="#（4）为了安全，修改-ssh-和-authorized-keys-文件的权限，只对Sunday用户开放各种权限：" class="headerlink" title="（4）为了安全，修改 .ssh 和 authorized_keys 文件的权限，只对Sunday用户开放各种权限："></a>（4）为了安全，修改 <strong>.ssh</strong> 和 <strong>authorized_keys</strong> 文件的权限，只对Sunday用户开放各种权限：</h6><div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">chmod</span> authorized_keys <span class="hljs-number">600</span>chmod .ssh <span class="hljs-number">700</span></code></pre></div>
+
+<h6 id="（5）退出远程登录，删除已经被拷贝的秘钥文件（可不删），在-SSH-文件夹中，编辑一个-config-文件："><a href="#（5）退出远程登录，删除已经被拷贝的秘钥文件（可不删），在-SSH-文件夹中，编辑一个-config-文件：" class="headerlink" title="（5）退出远程登录，删除已经被拷贝的秘钥文件（可不删），在 .SSH 文件夹中，编辑一个 config 文件："></a>（5）退出远程登录，删除已经被拷贝的秘钥文件（可不删），在 <strong>.SSH</strong> 文件夹中，编辑一个 <strong>config</strong> 文件：</h6><div class="code-wrapper"><pre><code class="hljs arduino">rm Sundayfile.pubvim config</code></pre></div>
+
+<p>​            在 <strong>config</strong> 文件中写入以下内容（如果系统是WIN，直接新建记事本写入进去，然后更改文件名为 <strong>config</strong> ，不要有后缀 <strong>.txt</strong>）：</p>
+<div class="code-wrapper"><pre><code class="hljs crmsh">Host Sunday	HostName <span class="hljs-number">132.232</span>.<span class="hljs-number">122.26</span>	port <span class="hljs-number">22</span>	<span class="hljs-keyword">User</span> <span class="hljs-title">Sunday</span>	IdentityFile ~/.ssh/Sundayfile</code></pre></div>
+
+<p>​            以后连接云服务器只需要输入以下命令：</p>
+<div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">ssh Sunday</span></code></pre></div>
+
+
+
+<h5 id="3-设置防火墙和端口"><a href="#3-设置防火墙和端口" class="headerlink" title="3. 设置防火墙和端口"></a>3. 设置防火墙和端口</h5><h6 id="（1）设置系统自动更新："><a href="#（1）设置系统自动更新：" class="headerlink" title="（1）设置系统自动更新："></a>（1）设置系统自动更新：</h6><div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">ssh Sundaysudo yum -y update</span></code></pre></div>
+
+<p>​            安装插件：</p>
+<div class="code-wrapper"><pre><code class="hljs cmake">sudo yum <span class="hljs-keyword">install</span> -y cronie yum-cron</code></pre></div>
+
+<p>​            更改配置，使其能够自动更新：</p>
+<div class="code-wrapper"><pre><code class="hljs vim">sudo <span class="hljs-keyword">vim</span> /etc/yum/yum-cron.<span class="hljs-keyword">conf</span></code></pre></div>
+
+<p>​            找到下图中的位置，把 <strong>no</strong> 改为 <strong>yes</strong> ：</p>
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/yum-cron.config.png" srcset="/img/loading.gif" lazyload></p>
+<p>​            启动 <strong>crond</strong> 和 <strong>yum-cron</strong> 服务：</p>
+<div class="code-wrapper"><pre><code class="hljs crmsh">sudo systemctl <span class="hljs-literal">start</span> crondsudo systemctl <span class="hljs-literal">start</span> yum-cron</code></pre></div>
+
+<h6 id="（2）安装防火墙（有的话就不用安装）："><a href="#（2）安装防火墙（有的话就不用安装）：" class="headerlink" title="（2）安装防火墙（有的话就不用安装）："></a>（2）安装防火墙（有的话就不用安装）：</h6><div class="code-wrapper"><pre><code class="hljs cmake">sudo yum <span class="hljs-keyword">install</span> -y firewalld</code></pre></div>
+
+<p>​            启动防火墙：</p>
+<div class="code-wrapper"><pre><code class="hljs crmsh">sudo systemctl <span class="hljs-literal">start</span> firewalld.service</code></pre></div>
+
+<p>​            查看防火墙是否启动：</p>
+<div class="code-wrapper"><pre><code class="hljs ada">sudo firewall-cmd <span class="hljs-comment">--list-all</span></code></pre></div>
+
+<p>​            为了安全，修改 <strong>SSH</strong> 默认端口（端口范围为：1024-66535）：</p>
+<div class="code-wrapper"><pre><code class="hljs awk">sudo vim <span class="hljs-regexp">/etc/</span>ssh/sshd_config</code></pre></div>
+
+<p>​            找到下图位置，将22更改为，你想要设置的端口号（10245）：</p>
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/sshd_config_port.png" srcset="/img/loading.gif" lazyload></p>
+<p>​            修改防火墙中的 SSH 服务配置，先获取这个文件，然后拷贝到防火墙工作路径中：</p>
+<div class="code-wrapper"><pre><code class="hljs awk">sudo cp <span class="hljs-regexp">/usr/</span>lib<span class="hljs-regexp">/firewalld/</span>services<span class="hljs-regexp">/ssh.xml /</span>etc<span class="hljs-regexp">/firewalld/</span>services<span class="hljs-regexp">/sudo vim /</span>etc<span class="hljs-regexp">/firewalld/</span>services/ssh.xml</code></pre></div>
+
+<p>​            找到下图中的位置，将22更改为（10245）：</p>
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/ssh.xml.png" srcset="/img/loading.gif" lazyload></p>
+<h6 id="（3）修改云服务器，安全组规则（删除端口22和443），添加自定义端口："><a href="#（3）修改云服务器，安全组规则（删除端口22和443），添加自定义端口：" class="headerlink" title="（3）修改云服务器，安全组规则（删除端口22和443），添加自定义端口："></a>（3）修改云服务器，安全组规则（删除端口22和443），添加自定义端口：</h6><p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/10245.png" srcset="/img/loading.gif" lazyload alt="10245"></p>
+<h6 id="（4）在云服务器上，重启防火墙和ssh服务："><a href="#（4）在云服务器上，重启防火墙和ssh服务：" class="headerlink" title="（4）在云服务器上，重启防火墙和ssh服务："></a>（4）在云服务器上，重启防火墙和ssh服务：</h6><div class="code-wrapper"><pre><code class="hljs maxima">sudo systemctl <span class="hljs-built_in">restart</span> sshd.servicesudo systemctl <span class="hljs-built_in">restart</span> firewalld.service</code></pre></div>
+
+<h6 id="（5）修改本地-SSH-中配置文件的端口（10245）："><a href="#（5）修改本地-SSH-中配置文件的端口（10245）：" class="headerlink" title="（5）修改本地 SSH 中配置文件的端口（10245）："></a>（5）修改本地 SSH 中配置文件的端口（10245）：</h6><div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">notepad coinfig</span></code></pre></div>
+
+
+
+<h5 id="4-安装数据库"><a href="#4-安装数据库" class="headerlink" title="4. 安装数据库"></a>4. 安装数据库</h5><h6 id="（1）Centos支持-mariadb-，所以需要安装它和它的服务器插件："><a href="#（1）Centos支持-mariadb-，所以需要安装它和它的服务器插件：" class="headerlink" title="（1）Centos支持 mariadb ，所以需要安装它和它的服务器插件："></a>（1）Centos支持 <strong>mariadb</strong> ，所以需要安装它和它的服务器插件：</h6><div class="code-wrapper"><pre><code class="hljs axapta">sudo yum -y install mariadb mariadb-<span class="hljs-keyword">server</span></code></pre></div>
+
+<p>​            启动数据库，并设置为开机自动启动：</p>
+<div class="code-wrapper"><pre><code class="hljs nsis">sudo <span class="hljs-params">system</span>ctl start mariadbsudo <span class="hljs-params">system</span>ctl enable mariadb.service</code></pre></div>
+
+<h6 id="（2）设置-root-用户密码（Tang1024）："><a href="#（2）设置-root-用户密码（Tang1024）：" class="headerlink" title="（2）设置 root 用户密码（Tang1024）："></a>（2）设置 root 用户密码（Tang1024）：</h6><div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">mysql_secure_installation</span></code></pre></div>
+
+<p>​            登录数据库，并创建一个数据库（为后面的Django用）：</p>
+<div class="code-wrapper"><pre><code class="hljs abnf">mysql -uroot -pcreate database mysite<span class="hljs-comment">;</span></code></pre></div>
+
+
+
+<h5 id="5-Centos系统安装python3"><a href="#5-Centos系统安装python3" class="headerlink" title="5. Centos系统安装python3"></a>5. Centos系统安装python3</h5><h6 id="（1）检查系统自带的Python版本，如果不是Python3，先安装前置依赖："><a href="#（1）检查系统自带的Python版本，如果不是Python3，先安装前置依赖：" class="headerlink" title="（1）检查系统自带的Python版本，如果不是Python3，先安装前置依赖："></a>（1）检查系统自带的Python版本，如果不是Python3，先安装前置依赖：</h6><div class="code-wrapper"><pre><code class="hljs ada">python <span class="hljs-comment">--versionsudo yum -y install openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel zlib-devel libffi-devel MySQL-python mysql-devel</span></code></pre></div>
+
+<h6 id="（2）创建一个文件夹-py3，去官网找到链接地址，下载Python3最新版本到该文件夹中："><a href="#（2）创建一个文件夹-py3，去官网找到链接地址，下载Python3最新版本到该文件夹中：" class="headerlink" title="（2）创建一个文件夹 py3，去官网找到链接地址，下载Python3最新版本到该文件夹中："></a>（2）创建一个文件夹 py3，去官网找到链接地址，下载Python3最新版本到该文件夹中：</h6><div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">mkdir</span> py3cd py3wget https://www.python.org/ftp/python/<span class="hljs-number">3</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>/Python-<span class="hljs-number">3</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>.tgz</code></pre></div>
+
+<h6 id="（3）将下载的python包，解压缩："><a href="#（3）将下载的python包，解压缩：" class="headerlink" title="（3）将下载的python包，解压缩："></a>（3）将下载的python包，解压缩：</h6><div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">tar</span> -zxvf Python-<span class="hljs-number">3</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>.tgz</code></pre></div>
+
+<h6 id="（4）设置Python的配置文件，使其能够安装到指定位置："><a href="#（4）设置Python的配置文件，使其能够安装到指定位置：" class="headerlink" title="（4）设置Python的配置文件，使其能够安装到指定位置："></a>（4）设置Python的配置文件，使其能够安装到指定位置：</h6><div class="code-wrapper"><pre><code class="hljs awk">cd <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/sudo mkdir python3cd ~/</span>py3<span class="hljs-regexp">/Python-3.8.0./</span>configure --prefix=<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/python3/</span></code></pre></div>
+
+<h6 id="（5）编译python，并安装，安装成功后，进入到指定的文件夹，查看是否安装成功："><a href="#（5）编译python，并安装，安装成功后，进入到指定的文件夹，查看是否安装成功：" class="headerlink" title="（5）编译python，并安装，安装成功后，进入到指定的文件夹，查看是否安装成功："></a>（5）编译python，并安装，安装成功后，进入到指定的文件夹，查看是否安装成功：</h6><div class="code-wrapper"><pre><code class="hljs awk">makesudo make installcd <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/python3/</span>ls</code></pre></div>
+
+<h6 id="（6）创建一个-Python3-和-pip3-链接："><a href="#（6）创建一个-Python3-和-pip3-链接：" class="headerlink" title="（6）创建一个 Python3 和 pip3 链接："></a>（6）创建一个 <strong>Python3</strong> 和 <strong>pip3</strong> 链接：</h6><div class="code-wrapper"><pre><code class="hljs awk">sudo ln -s <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/python3/</span>bin<span class="hljs-regexp">/python3 /u</span>sr<span class="hljs-regexp">/bin/</span>python3sudo ln -s <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/python3/</span>bin<span class="hljs-regexp">/pip3 /u</span>sr<span class="hljs-regexp">/bin/</span>pip3</code></pre></div>
+
+<h6 id="（7）安装一个-pip3-插件："><a href="#（7）安装一个-pip3-插件：" class="headerlink" title="（7）安装一个 pip3 插件："></a>（7）安装一个 pip3 插件：</h6><div class="code-wrapper"><pre><code class="hljs cmake">sudo pip3 <span class="hljs-keyword">install</span> mysqlclient</code></pre></div>
+
+
+
+<h5 id="6-安装测试Django"><a href="#6-安装测试Django" class="headerlink" title="6. 安装测试Django"></a>6. 安装测试Django</h5><h6 id="（1）使用-pip3-安装-Django-，并创建链接："><a href="#（1）使用-pip3-安装-Django-，并创建链接：" class="headerlink" title="（1）使用 pip3 安装 Django ，并创建链接："></a>（1）使用 pip3 安装 Django ，并创建链接：</h6><div class="code-wrapper"><pre><code class="hljs awk">sudo pip3 install djangosudo ln -s <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/python3/</span>bin<span class="hljs-regexp">/django-admin /u</span>sr/bin</code></pre></div>
+
+<h6 id="（2）测试-Django-是否安装成功，并安装一个-tree-插件（让文件以树结构显示）："><a href="#（2）测试-Django-是否安装成功，并安装一个-tree-插件（让文件以树结构显示）：" class="headerlink" title="（2）测试 Django 是否安装成功，并安装一个 tree 插件（让文件以树结构显示）："></a>（2）测试 Django 是否安装成功，并安装一个 <strong>tree</strong> 插件（让文件以树结构显示）：</h6><div class="code-wrapper"><pre><code class="hljs vim"><span class="hljs-keyword">cd</span> /home/sudo <span class="hljs-built_in">mkdir</span> wwwcd wwwsudo django-admin startproject rootsudo yum -<span class="hljs-keyword">y</span> install treecd rootcd rootsudo <span class="hljs-keyword">vim</span> views.<span class="hljs-keyword">py</span></code></pre></div>
+
+<p>​            写入以下内容：</p>
+<div class="code-wrapper"><pre><code class="hljs elm"><span class="hljs-title">from</span> django.http <span class="hljs-keyword">import</span> HttpResponsedef index(request):    return HttpResponse(&#x27;<span class="hljs-type">Hello</span>,world!&#x27;)</code></pre></div>
+
+<p>​            更改 <strong>urls.py</strong> 中配置，</p>
+<div class="code-wrapper"><pre><code class="hljs vim">sudo <span class="hljs-keyword">vim</span> urls.<span class="hljs-keyword">py</span></code></pre></div>
+
+<p>​            找到图下位置，并修改：</p>
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/urls_import.png" srcset="/img/loading.gif" lazyload></p>
+<p>​            更改 <strong>settings.py</strong> 中配置，</p>
+<div class="code-wrapper"><pre><code class="hljs vim">sudo <span class="hljs-keyword">vim</span> settings.<span class="hljs-keyword">py</span></code></pre></div>
+
+<p>​            找到图下的位置，并修改：</p>
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/setting_hosts.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/setting_databases.png" srcset="/img/loading.gif" lazyload></p>
+<p>​            迁移数据库：</p>
+<div class="code-wrapper"><pre><code class="hljs vim"><span class="hljs-keyword">cd</span> ..sudo <span class="hljs-keyword">python3</span> manage.<span class="hljs-keyword">py</span> migrate</code></pre></div>
+
+<p>​            启动 <strong>Django</strong> 服务器，并使用80端口，在浏览器中输入公网IP，就可以查看是否成功：</p>
+<div class="code-wrapper"><pre><code class="hljs nginx"><span class="hljs-attribute">sudo</span> python3 manage.py runserver <span class="hljs-number">0.0.0.0:80</span></code></pre></div>
+
+
+
+<h5 id="7-配置Django项目"><a href="#7-配置Django项目" class="headerlink" title="7. 配置Django项目"></a>7. 配置Django项目</h5><h6 id="（1）创建一个项目文件夹（mysite），打开-VScode-，下载一个-sftp-插件，使用快捷键（ctrl-shift-p），输入以下内容，修改其中的配置："><a href="#（1）创建一个项目文件夹（mysite），打开-VScode-，下载一个-sftp-插件，使用快捷键（ctrl-shift-p），输入以下内容，修改其中的配置：" class="headerlink" title="（1）创建一个项目文件夹（mysite），打开 VScode ，下载一个 sftp 插件，使用快捷键（ctrl+shift+p），输入以下内容，修改其中的配置："></a>（1）创建一个项目文件夹（mysite），打开 <strong>VScode</strong> ，下载一个 <strong>sftp</strong> 插件，使用快捷键（ctrl+shift+p），输入以下内容，修改其中的配置：</h6><div class="code-wrapper"><pre><code class="hljs arduino">sftp:config</code></pre></div>
+
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/sftp_json.png" srcset="/img/loading.gif" lazyload></p>
+<h6 id="（2）修改云服务器上，项目文件的权限用户（Sunday），"><a href="#（2）修改云服务器上，项目文件的权限用户（Sunday），" class="headerlink" title="（2）修改云服务器上，项目文件的权限用户（Sunday），"></a>（2）修改云服务器上，项目文件的权限用户（Sunday），</h6><div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /home/www/sudo <span class="hljs-built_in">chown</span> -R Sunday root</code></pre></div>
+
+<p>​            进入 <strong>VScode</strong> 中，从远程服务器同步到本地：</p>
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/%E8%BF%9C%E7%A8%8B%E5%90%8C%E6%AD%A5%E5%88%B0%E6%9C%AC%E5%9C%B0.png" srcset="/img/loading.gif" lazyload></p>
+<p>​            为了方便，修改 <strong>sftp.json</strong> 配置，添加以下内容，可以实时同步各种操作在本地和云服务器之间（不是必须添加，根据自己需求）：</p>
+<div class="code-wrapper"><pre><code class="hljs json"><span class="hljs-attr">&quot;syncOption&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">&#123;</span>	<span class="hljs-attr">&quot;delete&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-keyword">true</span><span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;watcher&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">&#123;</span>	<span class="hljs-attr">&quot;files&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;**/*&quot;</span><span class="hljs-punctuation">,</span>	<span class="hljs-attr">&quot;autoUpload&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>	<span class="hljs-attr">&quot;autoDelete&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-keyword">true</span><span class="hljs-punctuation">&#125;</span></code></pre></div>
+
+
+
+<h5 id="8-设置Nginx和uWSGI"><a href="#8-设置Nginx和uWSGI" class="headerlink" title="8. 设置Nginx和uWSGI"></a>8. 设置Nginx和uWSGI</h5><h6 id="（1）云服务器上安装-uWSGI-，并创建链接："><a href="#（1）云服务器上安装-uWSGI-，并创建链接：" class="headerlink" title="（1）云服务器上安装 uWSGI ，并创建链接："></a>（1）云服务器上安装 <strong>uWSGI</strong> ，并创建链接：</h6><div class="code-wrapper"><pre><code class="hljs awk">sudo pip3 install uwsgisudo ln -s <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/python3/</span>bin<span class="hljs-regexp">/uwsgi /u</span>sr<span class="hljs-regexp">/bin/u</span>wsgi3</code></pre></div>
+
+<h6 id="（2）安装-Nginx-："><a href="#（2）安装-Nginx-：" class="headerlink" title="（2）安装 Nginx ："></a>（2）安装 <strong>Nginx</strong> ：</h6><div class="code-wrapper"><pre><code class="hljs cmake">sudo yum -y <span class="hljs-keyword">install</span> nginx</code></pre></div>
+
+<h6 id="（3）更改-setting-py-配置，将调试模式改为-False-，"><a href="#（3）更改-setting-py-配置，将调试模式改为-False-，" class="headerlink" title="（3）更改 setting.py 配置，将调试模式改为 False ，"></a>（3）更改 setting.py 配置，将调试模式改为 <strong>False</strong> ，</h6><div class="code-wrapper"><pre><code class="hljs ini"><span class="hljs-attr">DEBUG</span> = <span class="hljs-literal">False</span></code></pre></div>
+
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/setting_debug.png" srcset="/img/loading.gif" lazyload></p>
+<p>​            如果项目中用到模板的话，必须把模板放到 <strong>templates</strong> 中，在文件夹里面新建一个 <strong>templates</strong> 文件夹，</p>
+<div class="code-wrapper"><pre><code class="hljs scheme"><span class="hljs-symbol">&#x27;DIRS</span><span class="hljs-symbol">&#x27;:</span> [	os.path.join(<span class="hljs-name">BASE_DIR</span>,<span class="hljs-symbol">&#x27;templates</span>&#x27;),]</code></pre></div>
+
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/setting_templates.png" srcset="/img/loading.gif" lazyload></p>
+<p>​            配置静态文件，并在文件夹中新建一个 <strong>static</strong> 文件夹：</p>
+<div class="code-wrapper"><pre><code class="hljs lua">STATIC_ROOT = <span class="hljs-built_in">os</span>.<span class="hljs-built_in">path</span>.join(BASE_DIR,<span class="hljs-string">&#x27;../collected_static&#x27;</span>)STATICFILES_DIRS = (	<span class="hljs-built_in">os</span>.<span class="hljs-built_in">path</span>.join(BASE_DIR,<span class="hljs-string">&#x27;static&#x27;</span>))</code></pre></div>
+
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/setting_static_root.png" srcset="/img/loading.gif" lazyload></p>
+<h6 id="（4）登录远程服务器，在-www-目录下创建-collected-static-文件夹（所有的静态文件，都会打包放在该文件夹中），"><a href="#（4）登录远程服务器，在-www-目录下创建-collected-static-文件夹（所有的静态文件，都会打包放在该文件夹中），" class="headerlink" title="（4）登录远程服务器，在 www 目录下创建 collected_static 文件夹（所有的静态文件，都会打包放在该文件夹中），"></a>（4）登录远程服务器，在 <strong>www</strong> 目录下创建 <strong>collected_static</strong> 文件夹（所有的静态文件，都会打包放在该文件夹中），</h6><div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /home/www/sudo <span class="hljs-built_in">mkdir</span> collected_static</code></pre></div>
+
+<p>​            打包静态文件，</p>
+<div class="code-wrapper"><pre><code class="hljs vim"><span class="hljs-keyword">cd</span> rootsudo <span class="hljs-keyword">python3</span> manage.<span class="hljs-keyword">py</span> collectstatic</code></pre></div>
+
+<h6 id="（5）打开-VScode-，新建一个-uwsgi-文件夹和一个-uwsgi-ini-文件，在-uwsgi-ini-中添加以下内容："><a href="#（5）打开-VScode-，新建一个-uwsgi-文件夹和一个-uwsgi-ini-文件，在-uwsgi-ini-中添加以下内容：" class="headerlink" title="（5）打开 VScode ，新建一个 uwsgi 文件夹和一个 uwsgi.ini 文件，在 uwsgi.ini 中添加以下内容："></a>（5）打开 <strong>VScode</strong> ，新建一个 <strong>uwsgi</strong> 文件夹和一个 <strong>uwsgi.ini</strong> 文件，在 <strong>uwsgi.ini</strong> 中添加以下内容：</h6><div class="code-wrapper"><pre><code class="hljs nix">[uwsgi]<span class="hljs-attr">socket</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8000</span><span class="hljs-attr">chdir</span> = /home/www/<span class="hljs-attr">rootmodule</span> = mysite.<span class="hljs-attr">wsgimater</span> = <span class="hljs-attr">trueprocesses</span> = <span class="hljs-number">1</span><span class="hljs-attr">threads</span> = <span class="hljs-number">2</span><span class="hljs-attr">max-requests</span> = <span class="hljs-number">2000</span><span class="hljs-attr">chmod-socket</span> = <span class="hljs-number">664</span><span class="hljs-attr">vacuum</span> = <span class="hljs-attr">truestats</span> = %(chdir)/uwsgi/uwsgi.<span class="hljs-attr">statuspidfile</span> = %(chdir)/uwsgi/uwsgi.<span class="hljs-attr">piddaemonize</span> = %(chdir)/uwsgi/uwsgi.log</code></pre></div>
+
+<h6 id="（6）远程服务器中编辑-nginx-的配置文件，"><a href="#（6）远程服务器中编辑-nginx-的配置文件，" class="headerlink" title="（6）远程服务器中编辑 nginx 的配置文件，"></a>（6）远程服务器中编辑 <strong>nginx</strong> 的配置文件，</h6><div class="code-wrapper"><pre><code class="hljs awk">sudo vim <span class="hljs-regexp">/etc/</span>nginx/nginx.conf</code></pre></div>
+
+<p><img src="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/python/django/nginx.conf.png" srcset="/img/loading.gif" lazyload></p>
+<div class="code-wrapper"><pre><code class="hljs gradle">server &#123;        listen       <span class="hljs-number">80</span>;                                            server_name  localhost;        # Load configuration files <span class="hljs-keyword">for</span> the <span class="hljs-keyword">default</span> server block.        location <span class="hljs-regexp">/ &#123;            uwsgi_pass 127.0.0.1:8000;                                 include /</span>etc<span class="hljs-regexp">/nginx/u</span>wsgi_params;        &#125;        location <span class="hljs-regexp">/static &#123;                                             alias /</span>home<span class="hljs-regexp">/www/</span>collected_static<span class="hljs-regexp">/;                                                       &#125;        error_page 404 /</span><span class="hljs-number">404</span>.html;            location = <span class="hljs-regexp">/40x.html &#123;        &#125;        error_page 500 502 503 504 /</span><span class="hljs-number">50</span>x.html;            location = /<span class="hljs-number">50</span>x.html &#123;        &#125;    &#125;</code></pre></div>
+
+<p>​            启动 <strong>uwsgi</strong> ，</p>
+<div class="code-wrapper"><pre><code class="hljs jboss-cli"><span class="hljs-keyword">cd</span> <span class="hljs-string">/home/www/rootsudo</span> uwsgi3 <span class="hljs-params">--ini</span> uwsgi.ini</code></pre></div>
+
+<p>​            启动 <strong>nginx</strong> 服务器，</p>
+<div class="code-wrapper"><pre><code class="hljs dos"><span class="hljs-built_in">cd</span> ~sudo systemctl <span class="hljs-built_in">start</span> nginx</code></pre></div>
+
+<p>​            当你更改了 <strong>views.py</strong> 文件，需要重新启动 <strong>uwsgi.pid</strong> ：</p>
+<div class="code-wrapper"><pre><code class="hljs awk">cd <span class="hljs-regexp">/home/</span>www<span class="hljs-regexp">/root/u</span>wsgisudo uwsgi3 --reload uwsgi.pid</code></pre></div>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Linux/" class="category-chain-item">Linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/">#python</a>
+      
+        <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/">#服务器</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Django搭建服务器</div>
+      <div>https://everysunday.github.io/2022/02/24/Django搭建服务器/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>T-River</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年2月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/24/WampServer%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AE/" title="WampServer简单配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">WampServer简单配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/24/Jetbrains%E7%B3%BB%E5%88%97/" title="Jetbrains系列">
+                        <span class="hidden-mobile">Jetbrains系列</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

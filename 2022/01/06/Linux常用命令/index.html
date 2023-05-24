@@ -1,0 +1,841 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/nav/cwj.jpg">
+  <link rel="icon" href="https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/nav/cwj.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="T-River">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. cd返回根目录 cd &#x2F;  相对路径 以当前文件夹为目标，进入相关的路径 cd 文件目录名  绝对路径，进入指定的某个文件夹下的之文件夹 cd &#x2F;文件目录名  在上次进入的目录和当前目录中切换 cd -  进入用户文件夹 cd ~    2. ls查看当前文件夹中的所有文件（蓝色代表文件夹，.代表隐藏文件） ls -a  更加人性化显示，把字节自动切换成合适的单位 ls-ah  ls -l：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux常用命令">
+<meta property="og:url" content="https://everysunday.github.io/2022/01/06/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/index.html">
+<meta property="og:site_name" content="随记">
+<meta property="og:description" content="1. cd返回根目录 cd &#x2F;  相对路径 以当前文件夹为目标，进入相关的路径 cd 文件目录名  绝对路径，进入指定的某个文件夹下的之文件夹 cd &#x2F;文件目录名  在上次进入的目录和当前目录中切换 cd -  进入用户文件夹 cd ~    2. ls查看当前文件夹中的所有文件（蓝色代表文件夹，.代表隐藏文件） ls -a  更加人性化显示，把字节自动切换成合适的单位 ls-ah  ls -l：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-06T11:06:01.000Z">
+<meta property="article:modified_time" content="2023-05-24T14:07:44.257Z">
+<meta property="article:author" content="T-River">
+<meta property="article:tag" content="命令">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Linux常用命令 - 随记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"everysunday.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":120,"cursorChar":"( ⊙ o ⊙ )","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 35vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>随记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://img-1256173913.cos.ap-chongqing.myqcloud.com/Imgbed/src/nav/xiaol.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Linux常用命令"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-01-06 19:06" pubdate>
+          2022年1月6日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux常用命令</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h5 id="1-cd"><a href="#1-cd" class="headerlink" title="1. cd"></a>1. cd</h5><p>返回根目录</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /</code></pre></div>
+
+<p>相对路径 以当前文件夹为目标，进入相关的路径</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> 文件目录名</code></pre></div>
+
+<p>绝对路径，进入指定的某个文件夹下的之文件夹</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /文件目录名</code></pre></div>
+
+<p>在上次进入的目录和当前目录中切换</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> -</code></pre></div>
+
+<p>进入用户文件夹</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~</code></pre></div>
+
+
+
+<h5 id="2-ls"><a href="#2-ls" class="headerlink" title="2. ls"></a>2. ls</h5><p>查看当前文件夹中的所有文件（蓝色代表文件夹，.代表隐藏文件）</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">ls</span> -a</code></pre></div>
+
+<p>更加人性化显示，把字节自动切换成合适的单位</p>
+<div class="code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">ls-ah</span></code></pre></div>
+
+<p>ls -l：让当前文件夹下的文件以列表的形式显示出来（可以缩写成ll）</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">ls</span> -l</code></pre></div>
+
+<p>查看当前目录下以a开头的所有文件</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">ls</span> a*</code></pre></div>
+
+<p>查看当前目录下以a结尾的所有文件</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">ls</span> *a</code></pre></div>
+
+
+
+<h5 id="3-mkdir"><a href="#3-mkdir" class="headerlink" title="3. mkdir"></a>3. mkdir</h5><p>在当前文件夹下创建一个文件</p>
+<div class="code-wrapper"><pre><code class="hljs arduino">mkdir 目录名</code></pre></div>
+
+<p>在指定的文件下，创建一个目录</p>
+<div class="code-wrapper"><pre><code class="hljs arduino">mkdir /目录名</code></pre></div>
+
+<p>创建多个文件夹，以空格隔开</p>
+<div class="code-wrapper"><pre><code class="hljs arduino">mkdir 目录名 文件名</code></pre></div>
+
+<p>在指定的文件夹下创建多个文件夹（以，隔开）</p>
+<div class="code-wrapper"><pre><code class="hljs css">mkdir /｛<span class="hljs-selector-tag">A</span>，<span class="hljs-selector-tag">B</span>｝</code></pre></div>
+
+<p>如果文件夹不存在，加上-p参数，自动创建文件夹</p>
+<div class="code-wrapper"><pre><code class="hljs arduino">mkdir 目录名/目录名 -p</code></pre></div>
+
+
+
+<h5 id="4-touch"><a href="#4-touch" class="headerlink" title="4. touch"></a>4. touch</h5><p>如果文件不存在，创建文件</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">touch</span> 文件名</code></pre></div>
+
+<p>在指定的文件夹下，新建一个文件（上一级目录必须存在）</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">touch</span> 文件夹/文件名</code></pre></div>
+
+
+
+<h5 id="5-mv"><a href="#5-mv" class="headerlink" title="5. mv"></a>5. mv</h5><p>移动或重命名文件</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">mv</span> [options] 原文件名 新文件名 //选项可不写 <span class="hljs-built_in">mv</span> aaa bbb
+<span class="hljs-built_in">mv</span> [options] 原目录 新目录</code></pre></div>
+
+<p>参数：</p>
+<ul>
+<li><strong>-b</strong>: 当目标文件或目录存在时，在执行覆盖前，会为其创建一个备份。</li>
+<li><strong>-i</strong>: 如果指定移动的源目录或文件与目标的目录或文件同名，则会先询问是否覆盖旧文件，输入 y 表示直接覆盖，输入 n 表示取消该操作。</li>
+<li><strong>-f</strong>: 如果指定移动的源目录或文件与目标的目录或文件同名，不会询问，直接覆盖旧文件。</li>
+<li><strong>-n</strong>: 不要覆盖任何已存在的文件或目录。</li>
+<li><strong>-u</strong>：当源文件比目标文件新或者目标文件不存在时，才执行移动操作</li>
+</ul>
+<h5 id="6-gedit-文件名"><a href="#6-gedit-文件名" class="headerlink" title="6. gedit 文件名"></a>6. gedit 文件名</h5><p>打开指定文件；只能在桌面端centos，才能使用</p>
+<h5 id="7-rm"><a href="#7-rm" class="headerlink" title="7. rm"></a>7. rm</h5><p>删除指定文件</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">rm</span> 文件名</code></pre></div>
+
+<p>删除文件夹</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">rm</span> -r 文件夹</code></pre></div>
+
+<p>删除当前文件夹下的所有文件（隐藏文件和目录下有其他文件的无法删除）</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">rm</span> * -r</code></pre></div>
+
+
+
+<h5 id="8-clear"><a href="#8-clear" class="headerlink" title="8. clear"></a>8. clear</h5><p>清屏（只是把内容移上去了，相当于换了个屏幕）</p>
+<h5 id="9-more"><a href="#9-more" class="headerlink" title="9. more"></a>9. more</h5><p>more 文件名：当文件比较多的时候才使用此命令；空格往下翻页，B往回翻页，q退出</p>
+<h5 id="10-find"><a href="#10-find" class="headerlink" title="10. find"></a>10. find</h5><p>（1）find 目录 -name 文件名：查找指定目录下的指定的文件</p>
+<p>（2）find 目录 -name ‘*文件类型’：查找指定目录下所有指定类型的文件</p>
+<h5 id="11-压缩和解压"><a href="#11-压缩和解压" class="headerlink" title="11. 压缩和解压"></a>11. 压缩和解压</h5><p>常用参数</p>
+<div class="code-wrapper"><pre><code class="hljs diff"><span class="hljs-deletion">-c	建立压缩档案</span>
+<span class="hljs-deletion">-x	解压</span>
+<span class="hljs-deletion">-t	查看内容</span>
+<span class="hljs-deletion">-r	向压缩归档文件末尾追加文件</span>
+<span class="hljs-deletion">-u	更新原压缩包中的文件</span></code></pre></div>
+
+<p>独立的参数，压缩解压都要用到其中一个，可以和别的命令连用但只能用其中一个</p>
+<div class="code-wrapper"><pre><code class="hljs diff"><span class="hljs-deletion">-z	有gzip属性的</span>
+<span class="hljs-deletion">-j	有bz2属性的（bzip2）</span>
+<span class="hljs-deletion">-J	具有xz属性的</span>
+<span class="hljs-deletion">-Z	有compress属性的（umcompress）</span>
+<span class="hljs-deletion">-v	显示所有过程</span>
+<span class="hljs-deletion">-O	将文件解开到标准输出</span></code></pre></div>
+
+<p>必须的参数</p>
+<div class="code-wrapper"><pre><code class="hljs diff"><span class="hljs-deletion">-f	使用包的名称（这个参数只能放到最后）</span></code></pre></div>
+
+<h6 id="（1）压缩"><a href="#（1）压缩" class="headerlink" title="（1）压缩"></a>（1）压缩</h6><div class="code-wrapper"><pre><code class="hljs stylus">tar –cvf jpg<span class="hljs-selector-class">.tar</span> *<span class="hljs-selector-class">.jpg</span>  将该目录所有jpg文件打包成tar<span class="hljs-selector-class">.jpg</span>
+
+tar –czf jpg<span class="hljs-selector-class">.tar</span><span class="hljs-selector-class">.gz</span> *<span class="hljs-selector-class">.jpg</span>   将该目录里所有jpg文件打包成jpg.tar后，生成一个名为jpg<span class="hljs-selector-class">.tar</span>.gz的压缩包
+
+tar –cjf jpg<span class="hljs-selector-class">.tar</span><span class="hljs-selector-class">.bz2</span> *<span class="hljs-selector-class">.jpg</span> 将该目录里所有jpg文件打包成jpg.tar后，生成一个名为jpg<span class="hljs-selector-class">.tar</span>.bz2的压缩包
+
+tar –cZf jpg<span class="hljs-selector-class">.tar</span><span class="hljs-selector-class">.Z</span> *<span class="hljs-selector-class">.jpg</span>   将该目录里所有jpg文件打包成jpg.tar后，生成一个名为jpg<span class="hljs-selector-class">.tar</span>.Z的压缩包
+
+rar <span class="hljs-selector-tag">a</span> jpg<span class="hljs-selector-class">.rar</span> *<span class="hljs-selector-class">.jpg</span> rar格式的压缩
+
+zip jpg<span class="hljs-selector-class">.zip</span> *<span class="hljs-selector-class">.jpg</span>   zip格式的压缩</code></pre></div>
+
+<h6 id="（2）解压"><a href="#（2）解压" class="headerlink" title="（2）解压"></a>（2）解压</h6><div class="code-wrapper"><pre><code class="hljs stylus">tar –xvf file<span class="hljs-selector-class">.tar</span>  解压 tar包
+tar -xzvf file<span class="hljs-selector-class">.tar</span><span class="hljs-selector-class">.gz</span> 解压tar<span class="hljs-selector-class">.gz</span>
+tar -xjvf file<span class="hljs-selector-class">.tar</span><span class="hljs-selector-class">.bz2</span>   解压 tar<span class="hljs-selector-class">.bz2</span>
+tar –xZvf file<span class="hljs-selector-class">.tar</span><span class="hljs-selector-class">.Z</span>   解压tar<span class="hljs-selector-class">.Z</span>
+unrar e file<span class="hljs-selector-class">.rar</span> 解压rar
+unzip file<span class="hljs-selector-class">.zip</span> 解压zip</code></pre></div>
+
+
+
+<h5 id="12-chmod"><a href="#12-chmod" class="headerlink" title="12. chmod"></a>12. chmod</h5><p>为当前登录用户添加可读权限（r读取权限；数字代号4）</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">chmod</span> u+r</code></pre></div>
+
+<p>为当前组用户减少可写权限（w写入权限；数字代号2）</p>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">chmod</span> g-w</code></pre></div>
+
+<p>为其他用户重新赋予可执行权限（x执行权限；数字代号1）</p>
+<div class="code-wrapper"><pre><code class="hljs routeros">chmod <span class="hljs-attribute">o</span>=x</code></pre></div>
+
+<p>所有用户都没有任何权限（-表示没有任何权限；数字代号0）</p>
+<div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">chmod</span> <span class="hljs-number">000</span></code></pre></div>
+
+
+
+<h5 id="13-vim"><a href="#13-vim" class="headerlink" title="13. vim"></a>13. vim</h5><h6 id="（1）deepin修改vi和vim的tab为4个空格"><a href="#（1）deepin修改vi和vim的tab为4个空格" class="headerlink" title="（1）deepin修改vi和vim的tab为4个空格"></a>（1）<strong>deepin</strong>修改<strong>vi</strong>和<strong>vim</strong>的<strong>tab</strong>为4个空格</h6><div class="code-wrapper"><pre><code class="hljs awk">sudo vim <span class="hljs-regexp">/etc/</span>vim/vimrc</code></pre></div>
+
+<p>在文件末尾加入以下内容</p>
+<div class="code-wrapper"><pre><code class="hljs vim"><span class="hljs-comment">&quot; add by school1024.com</span>
+<span class="hljs-keyword">set</span> <span class="hljs-keyword">ts</span>=<span class="hljs-number">4</span>
+<span class="hljs-keyword">set</span> softtabstop=<span class="hljs-number">4</span>
+<span class="hljs-keyword">set</span> <span class="hljs-built_in">shiftwidth</span>=<span class="hljs-number">4</span>
+<span class="hljs-keyword">set</span> expandtab
+<span class="hljs-keyword">set</span> autoindent</code></pre></div>
+
+<ul>
+<li>ts是tabstop的缩写，设TAB宽度为4个空格。</li>
+<li>softtabstop 表示在编辑模式的时候按退格键的时候退回缩进的长度，当使用 expandtab 时特别有用。</li>
+<li>shiftwidth 表示每一级缩进的长度，一般设置成跟 softtabstop 一样。</li>
+<li>expandtab表示缩进用空格来表示，noexpandtab 则是用制表符表示一个缩进。</li>
+<li>autoindent自动缩进</li>
+</ul>
+<h6 id="（2）vi或者vim模式下，选中代码块，变成可是模式，不能使用快捷复制粘贴"><a href="#（2）vi或者vim模式下，选中代码块，变成可是模式，不能使用快捷复制粘贴" class="headerlink" title="（2）vi或者vim模式下，选中代码块，变成可是模式，不能使用快捷复制粘贴"></a>（2）vi或者vim模式下，选中代码块，变成可是模式，不能使用快捷复制粘贴</h6><div class="code-wrapper"><pre><code class="hljs bash">vi ~/.vimrc</code></pre></div>
+
+<p>添加以下内容</p>
+<div class="code-wrapper"><pre><code class="hljs routeros"><span class="hljs-string">&quot;禁用选中后进入可视化&quot;</span>
+<span class="hljs-keyword">if</span> has(<span class="hljs-string">&#x27;mouse&#x27;</span>)
+    <span class="hljs-built_in">set</span> <span class="hljs-attribute">mouse-</span>=a
+endif</code></pre></div>
+
+
+
+<h5 id="14-清理已删除软件的残余配置"><a href="#14-清理已删除软件的残余配置" class="headerlink" title="14. 清理已删除软件的残余配置"></a>14. 清理已删除软件的残余配置</h5><div class="code-wrapper"><pre><code class="hljs coq">dpkg -l | <span class="hljs-type">grep</span> <span class="hljs-string">&quot;^rc&quot;</span> | <span class="hljs-type">awk</span> &#x27;&#123;print $<span class="hljs-number">2</span>&#125;&#x27; | <span class="hljs-type">xargs</span> sudo apt -y purge</code></pre></div>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Linux/" class="category-chain-item">Linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%91%BD%E4%BB%A4/">#命令</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux常用命令</div>
+      <div>https://everysunday.github.io/2022/01/06/Linux常用命令/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>T-River</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年1月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/01/26/%E8%B5%84%E6%BA%90%E6%8E%A8%E8%8D%90/" title="资源推荐">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">资源推荐</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/01/06/mysql/" title="Mysql常用命令">
+                        <span class="hidden-mobile">Mysql常用命令</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
